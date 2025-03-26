@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "ESNext", // Используйте ESNext для модулей ES
+    "moduleResolution": "Node", // Разрешение модулей как в Node.js
+    "target": "ESNext", // Таргетируем на ESNext
+    "esModuleInterop": true, // Для совместимости с CommonJS модулями
+    "skipLibCheck": true, // Пропуск проверки библиотек
+    "strict": true, // Включение строгих проверок
+    "resolveJsonModule": true, // Разрешение импорта JSON
+    "outDir": "./dist", // Папка для выходных файлов
+
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["**/*.ts"]
+}
