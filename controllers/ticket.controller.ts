@@ -48,7 +48,7 @@ class TicketController extends Controller<ITicket> {
       const date = new Date(req.query.date);
       if (!isValidDate(date)) {
         return next(
-          new AppError("Неверный формат date. Ожидалось: YYYY-MM-DD", 400)
+          new AppError("Неверный формат даты. Ожидалось: YYYY-MM-DD", 400)
         );
       }
 
@@ -64,7 +64,7 @@ class TicketController extends Controller<ITicket> {
 
       if (!isValidDate(startDate) || !isValidDate(endDate)) {
         return next(
-          new AppError("Неверный формат date. Ожидалось: YYYY-MM-DD", 400)
+          new AppError("Неверный формат даты. Ожидалось: YYYY-MM-DD", 400)
         );
       }
 
