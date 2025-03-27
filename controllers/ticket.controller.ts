@@ -28,14 +28,10 @@ class TicketController extends Controller<ITicket> {
   constructor() {
     super(Ticket, "ticket");
 
-    this.getAll = this.getAllDocuments;
-
     METHODS.forEach((method) => {
       this[method] = catchAsync(this[method].bind(this) as any);
     });
   }
-
-  getAll: (req: Request, res: Response, next: NextFunction) => void;
 
   async setDates(
     req: CustomRequest<{}, {}, {}, QueryParamsTicket>,

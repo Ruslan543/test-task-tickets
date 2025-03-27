@@ -6,13 +6,7 @@ import AppError from "../utils/appError.js";
 import catchAsync from "../utils/catchAsync.js";
 import { CustomRequest, PopulateObject } from "./controller.interface.js";
 
-const METHODS = [
-  "getAllDocuments",
-  "getOneDocument",
-  "createDocument",
-  "updateDocument",
-  "deleteDocument",
-] as const;
+const METHODS = ["getAll", "getOne", "create", "update", "delete"] as const;
 
 class Controller<T extends Document> {
   private Model: Model<T>;
@@ -35,11 +29,7 @@ class Controller<T extends Document> {
     });
   }
 
-  async getAllDocuments(
-    request: CustomRequest,
-    response: Response,
-    next: NextFunction
-  ) {
+  async getAll(request: CustomRequest, response: Response, next: NextFunction) {
     request.filterObject = request.filterObject ?? {};
 
     const features = new APIFeatures(
@@ -63,11 +53,7 @@ class Controller<T extends Document> {
     });
   }
 
-  async getOneDocument(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
+  async getOne(request: Request, response: Response, next: NextFunction) {
     const document = await this.Model.findById(request.params.id);
 
     if (!document) {
@@ -82,11 +68,7 @@ class Controller<T extends Document> {
     });
   }
 
-  async createDocument(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
+  async create(request: Request, response: Response, next: NextFunction) {
     const newDocument = await this.Model.create(request.body);
 
     response.status(201).json({
@@ -95,11 +77,7 @@ class Controller<T extends Document> {
     });
   }
 
-  async updateDocument(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
+  async update(request: Request, response: Response, next: NextFunction) {
     const document = await this.Model.findByIdAndUpdate(
       request.params.id,
       request.body,
@@ -118,11 +96,7 @@ class Controller<T extends Document> {
     });
   }
 
-  async deleteDocument(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
+  async delete(request: Request, response: Response, next: NextFunction) {
     const document = await this.Model.findByIdAndDelete(request.params.id);
 
     if (!document) {
