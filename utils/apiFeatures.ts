@@ -4,16 +4,26 @@ import { TParsedQs } from "../types/request-query.types";
 class APIFeatures<T, Q> {
   query: Query<T, Q>;
   queryString: TParsedQs;
+  fieldsModel: string[];
 
-  constructor(query: Query<T, Q>, queryString: TParsedQs) {
+  constructor(
+    query: Query<T, Q>,
+    queryString: TParsedQs,
+    fieldsModel: string[]
+  ) {
     this.query = query;
     this.queryString = queryString;
+    this.fieldsModel = fieldsModel;
   }
 
   filter() {
     const queryObject = { ...this.queryString };
     const excludedFileds = ["page", "sort", "limit", "fields"];
     excludedFileds.forEach((field) => delete queryObject[field]);
+
+    Object.keys(queryObject).forEach(
+      (field) => this.fieldsModel.includes(field) || delete queryObject[field]
+    );
 
     const queryString = JSON.stringify(queryObject).replace(
       /\b(gte|gt|lte|lt|ne)\b/g,

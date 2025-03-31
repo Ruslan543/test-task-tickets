@@ -1,35 +1,37 @@
 import { NextFunction, Request, Response } from "express";
 
-import Controller from "./controller.js";
-import { Ticket } from "../models/ticket.model.js";
-import { isValidDate } from "../utils/date.helper.js";
-import AppError from "../utils/appError.js";
-import catchAsync from "../utils/catchAsync.js";
+import Controller from "../controller.js";
+import { Ticket } from "../../models/ticket.model.js";
+import { isValidDate } from "../../utils/date.helper.js";
+import AppError from "../../utils/appError.js";
+import catchAsync from "../../utils/catchAsync.js";
 
-import { CustomRequest } from "./controller.interface.js";
+import { CustomRequest } from "../controller.interface.js";
 import { IFilterObject, QueryParamsTicket } from "./ticket.interface.js";
-import { ITicket, TicketStatus } from "../models/ticket.interface.js";
+import { ITicket, TicketStatus } from "../../models/ticket.interface.js";
 import {
   CreateTicket,
   CloseTypes,
   CancelTicket,
 } from "./types-body/ticket.types.js";
+import { TypeMethodDefiner } from "../../types/controller.types.js";
 
-const METHODS = [
-  "create",
+const METHODS: Array<keyof TicketController> = [
   "setDates",
+  "create",
   "cancelActiveTickets",
   "takeTicketInWork",
   "closeTicket",
   "cancelTicket",
-] as const;
+];
 
 class TicketController extends Controller<ITicket> {
   constructor() {
     super(Ticket, "ticket");
 
     METHODS.forEach((method) => {
-      this[method] = catchAsync(this[method].bind(this) as any);
+      const handler = this[method] as TypeMethodDefiner<this, typeof method>;
+      this[method] = catchAsync(handler.bind(this));
     });
   }
 

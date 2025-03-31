@@ -5,8 +5,15 @@ import APIFeatures from "../utils/apiFeatures.js";
 import AppError from "../utils/appError.js";
 import catchAsync from "../utils/catchAsync.js";
 import { CustomRequest, PopulateObject } from "./controller.interface.js";
+import { TypeMethodDefiner } from "../types/controller.types.js";
 
-const METHODS = ["getAll", "getOne", "create", "update", "delete"] as const;
+const METHODS: Array<keyof Controller<any>> = [
+  "getAll",
+  "getOne",
+  "create",
+  "update",
+  "delete",
+];
 
 class Controller<T extends Document> {
   private Model: Model<T>;
@@ -25,7 +32,8 @@ class Controller<T extends Document> {
     this.populateObject = populateObject ?? {};
 
     METHODS.forEach((method) => {
-      this[method] = catchAsync(this[method].bind(this) as any);
+      const handler = this[method] as TypeMethodDefiner<this, typeof method>;
+      this[method] = catchAsync(handler.bind(this));
     });
   }
 
@@ -34,7 +42,8 @@ class Controller<T extends Document> {
 
     const features = new APIFeatures(
       this.Model.find(request.filterObject),
-      request.query
+      request.query,
+      Object.keys(this.Model.schema.paths)
     );
 
     features
